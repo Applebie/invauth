@@ -175,3 +175,11 @@ EMAIL_PORT = 587
 
 
 AUTH_USER_MODEL = 'users.User'
+
+ACCOUNT_USERNAME_REQUIRED = False
+
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'users.serializers.CustomRegisterSerializer'
+# }
+
+ACCOUNT_ADAPTER = 'users.adapters.CustomUserAccountAdapter'
