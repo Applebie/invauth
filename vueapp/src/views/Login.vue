@@ -35,10 +35,11 @@
                         .then((response) => {    
                             console.log("Logged in"||response)   
                             //axios.defaults.headers.common["Authorization"] ="Bearer " + localStorage.getItem("jwt");
-                            localStorage.setItem("jwt",response.data.access_token);
-                            localStorage.setItem("jwt",response.data.refresh_token);
-                            localStorage.setItem("jwt",response.data.user);
-                            router.push("/home")    
+                            localStorage.setItem("access_token",response.data.access_token);
+                           // localStorage.setItem("jwt",response.data.refresh_token);
+                            //localStorage.setItem("jwt",response.data.user);
+                            //setCurrentUser(response.data);
+                            router.push("/profile")    
                         })    
                         .catch((errors) => {    
                             console.log("Cannot log in"||errors)    

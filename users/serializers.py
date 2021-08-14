@@ -4,11 +4,16 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        # fields = '__all__'
+        exclude = ['password',]
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'password', ] #'first_name', 'last_name',
+        fields = ['username', 'email', 'password', 'first_name', 'last_name',]
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -24,6 +29,32 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+##############33
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.state import token_backend
+
+class CustomTokenRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        data = super(CustomTokenRefreshSerializer, self).validate(attrs)
+        decoded_payload = token_backend.decode(data['access'], verify=True)
+        user_uid=decoded_payload['user_id']
+        # add filter query
+        data.update({'custom_field': user_uid})
+        return data
+
+# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     def validate(self, attrs):
+#         # The default result (access/refresh tokens)
+#         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+#         # Custom data you want to include
+#         data.update({'user': self.user.username})
+#         data.update({'id': self.user.id})
+#         # and everything else you want to send in the response
+#         return data
+
 # from rest_framework import serializers
 # from django.contrib.auth import get_user_model # If used custom user model
 

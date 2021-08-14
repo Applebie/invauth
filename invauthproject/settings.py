@@ -16,11 +16,6 @@ DEBUG =config('django_debug')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = []
-
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +39,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
     
 ]
 
@@ -146,14 +143,31 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #-- additional
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ],
+# }
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ],
+'DEFAULT_PERMISSION_CLASSES': (
+    'rest_framework.permissions.IsAuthenticated',
+),
+'DEFAULT_AUTHENTICATION_CLASSES': (
+    'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+),
 }
+
+# REST_FRAMEWORK = { 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
+# , 'DEFAULT_AUTHENTICATION_CLASSES': ( 'rest_framework.authentication.TokenAuthentication'
+# , 'rest_framework_jwt.authentication.JSONWebTokenAuthentication'
+# , 'rest_framework.authentication.SessionAuthentication'
+# , 'rest_framework.authentication.BasicAuthentication', )
+# , 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning', } 
+
 SITE_ID = 1
 REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'my-app-auth' # what the cookie will be called 
+JWT_AUTH_COOKIE = 'JWT' # what the cookie will be called 
 
 # to handle authentication while login
 AUTHENTICATION_BACKENDS = [
@@ -188,3 +202,45 @@ ACCOUNT_USERNAME_REQUIRED = False
 # }
 
 ACCOUNT_ADAPTER = 'users.adapters.CustomUserAccountAdapter'
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'invauthproject.users.views.JWTAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     )
+# }
+
+from corsheaders.defaults import default_headers
+
+
+# CORS_ALLOW_HEADERS = default_headers + ('content-disposition', 'accept-encoding',
+#                       'content-type', 'accept', 'origin', 'authorization','Token')
+
+ALLOWED_HOSTS=['*']
+#ALLOWED_HOSTS = [*]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
